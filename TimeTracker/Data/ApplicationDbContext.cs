@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TimeTracker.Models;
 
 namespace TimeTracker.Data
 {
@@ -12,5 +13,6 @@ namespace TimeTracker.Data
             : base(options)
         {
         }
+        public DbSet<TimeSheetEntry> Entries { get; set; }
     }
 }

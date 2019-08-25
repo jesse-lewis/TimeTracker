@@ -1,0 +1,31 @@
+﻿@page
+@model TimeTracker.Pages.Entries.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>TimeSheetEntry</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeSheetEntry.Hours)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TimeSheetEntry.Hours)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeSheetEntry.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TimeSheetEntry.Date)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.TimeSheetEntry.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
