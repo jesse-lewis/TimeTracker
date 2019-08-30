@@ -9,6 +9,7 @@ namespace TimeTracker.Models
     public class TimeSheetEntry
     {
         public long Id { get; set; }
+        public User User { get; set; }
         public byte Hours { get; set; }
 
         [DataType(DataType.Date)]

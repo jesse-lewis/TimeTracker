@@ -9,9 +9,9 @@ namespace TimeTracker.Pages
 {
     public class IndexModel : PageModel
     {
-        public void OnGet()
+        public RedirectResult OnGet()
         {
-
+            return Redirect("/Entries/Index");
         }
     }
 }
