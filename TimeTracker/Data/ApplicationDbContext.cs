@@ -15,5 +15,6 @@ namespace TimeTracker.Data
         }
 
         public DbSet<TimeSheetEntry> Entries { get; set; }
+        public DbSet<Job> Jobs { get; set; }
     }
 }

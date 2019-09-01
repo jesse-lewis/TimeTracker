@@ -14,14 +14,21 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="TimeSheetEntry.Hours" class="control-label"></label>
-                <input asp-for="TimeSheetEntry.Hours" class="form-control" />
-                <span asp-validation-for="TimeSheetEntry.Hours" class="text-danger"></span>
+                <label asp-for="TimeSheetEntries.Hours" class="control-label"></label>
+                <input asp-for="TimeSheetEntries.Hours" class="form-control" />
+                <span asp-validation-for="TimeSheetEntries.Hours" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TimeSheetEntry.Date" class="control-label"></label>
-                <input asp-for="TimeSheetEntry.Date" class="form-control" />
-                <span asp-validation-for="TimeSheetEntry.Date" class="text-danger"></span>
+                <label asp-for="TimeSheetEntries.Date" class="control-label"></label>
+                <input asp-for="TimeSheetEntries.Date" class="form-control" />
+                <span asp-validation-for="TimeSheetEntries.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeSheetEntries.Job" class="control-label"></label>
+                <select asp-for="TimeSheetEntries.Job" asp-items="Model.Jobs">
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="TimeSheetEntries.Job" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -33,6 +40,10 @@
 <div>
     <a asp-page="Index">Back to List</a>
 </div>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

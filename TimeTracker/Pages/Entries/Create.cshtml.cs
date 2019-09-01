@@ -21,13 +21,16 @@ namespace TimeTracker.Pages.Entries
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            Jobs = new SelectList(await _context.Jobs.ToListAsync());
             return Page();
         }
 
         [BindProperty]
-        public TimeSheetEntry TimeSheetEntry { get; set; }
+        public TimeSheetEntry TimeSheetEntries { get; set; }
+
+        public SelectList Jobs { get; private set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -41,9 +44,9 @@ namespace TimeTracker.Pages.Entries
             {
                 return Page();
             }
-            TimeSheetEntry.User = user;
+            TimeSheetEntries.User = user;
 
-            _context.Entries.Add(TimeSheetEntry);
+            _context.Entries.Add(TimeSheetEntries);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

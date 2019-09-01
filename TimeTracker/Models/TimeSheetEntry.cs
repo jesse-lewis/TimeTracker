@@ -11,6 +11,8 @@ namespace TimeTracker.Models
         public long Id { get; set; }
         public User User { get; set; }
 
+        public Job Job { get; set; }
+
         [Range(0,24)]
         public byte Hours { get; set; }
 
