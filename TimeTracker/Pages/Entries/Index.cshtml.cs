@@ -31,7 +31,7 @@ namespace TimeTracker.Pages.Entries
             {
                 return;
             }
-            TimeSheetEntries = await _context.Entries.Where(e=>e.User == user).ToListAsync();
+            TimeSheetEntries = await _context.Entries.Where(e=>e.User == user).Include(e=>e.Job).ToListAsync();
         }
 
         private string GetUserGuid()
