@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using TimeTracker.Data;
 using TimeTracker.Models;
 
@@ -12,9 +9,9 @@ namespace TimeTracker.Pages.Entries
 {
     public class DeleteModel : PageModel
     {
-        private readonly TimeTracker.Data.ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
-        public DeleteModel(TimeTracker.Data.ApplicationDbContext context)
+        public DeleteModel(IApplicationDbContext context)
         {
             _context = context;
         }
@@ -29,13 +26,23 @@ namespace TimeTracker.Pages.Entries
                 return NotFound();
             }
 
-            TimeSheetEntry = await _context.Entries.FirstOrDefaultAsync(m => m.Id == id);
+            TimeSheetEntry = await GetEntry(id);
 
             if (TimeSheetEntry == null)
             {
                 return NotFound();
             }
             return Page();
+        }
+
+        private Task<TimeSheetEntry> GetEntry(long? id)
+        {
+            return _context.GetEntryById(id.Value, GetUserGuid());
+        }
+
+        private string GetUserGuid()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         public async Task<IActionResult> OnPostAsync(long? id)
@@ -45,12 +52,11 @@ namespace TimeTracker.Pages.Entries
                 return NotFound();
             }
 
-            TimeSheetEntry = await _context.Entries.FindAsync(id);
+            TimeSheetEntry = await GetEntry(id);
 
             if (TimeSheetEntry != null)
             {
-                _context.Entries.Remove(TimeSheetEntry);
-                await _context.SaveChangesAsync();
+                await _context.RemoveTimeSheetEntry(TimeSheetEntry);
             }
 
             return RedirectToPage("./Index");

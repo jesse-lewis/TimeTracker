@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using TimeTracker.Data;
 using TimeTracker.Models;
 
@@ -12,9 +9,9 @@ namespace TimeTracker.Pages.Entries
 {
     public class DetailsModel : PageModel
     {
-        private readonly TimeTracker.Data.ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
-        public DetailsModel(TimeTracker.Data.ApplicationDbContext context)
+        public DetailsModel(IApplicationDbContext context)
         {
             _context = context;
         }
@@ -28,13 +25,18 @@ namespace TimeTracker.Pages.Entries
                 return NotFound();
             }
 
-            TimeSheetEntry = await _context.Entries.FirstOrDefaultAsync(m => m.Id == id);
+            TimeSheetEntry = await _context.GetEntryById(id.Value, GetUserGuid());
 
             if (TimeSheetEntry == null)
             {
                 return NotFound();
             }
             return Page();
+        }
+
+        private string GetUserGuid()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
     }
 }

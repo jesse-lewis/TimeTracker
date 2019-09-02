@@ -25,6 +25,12 @@
                 <span asp-validation-for="TimeSheetEntry.Date" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TimeSheetEntry.Job" class="control-label"></label>
+                <input id="selectedJob" />
+                <input hidden="hidden" asp-for="TimeSheetEntry.Job.Id" class="form-control" />
+                <span asp-validation-for="TimeSheetEntry.Job.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -34,6 +40,39 @@
 <div>
     <a asp-page="./Index">Back to List</a>
 </div>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        const jobIdBox = $("#TimeSheetEntry_Job_Id");
+        $.getJSON('../api/job/', function (data) {
+            var items = data.map(function (job) {
+                return { label: job.jobNumber, value: job.id };
+            });
+            setAutocomplete(items);
+            var thisJob = items.filter(item => item.value == jobIdBox.val())[0];
+            $("#selectedJob").val(thisJob.label)
+        });
+
+        const setAutocomplete = function(items) {
+            $("#selectedJob").autocomplete({
+                source: items,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    jobIdBox.val(ui.item.value);
+                    $("#selectedJob").val(ui.item.label);
+                    console.log($("#selectedJob").val());
+                },
+                focus: function(event, ui){
+                    event.preventDefault();
+                    $("#selectedJob").val(ui.item.label);
+                }
+            })
+        }
+    });
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

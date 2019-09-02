@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Data;
 using TimeTracker.Models;
@@ -13,9 +10,9 @@ namespace TimeTracker.Pages.Entries
 {
     public class EditModel : PageModel
     {
-        private readonly TimeTracker.Data.ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
-        public EditModel(TimeTracker.Data.ApplicationDbContext context)
+        public EditModel(IApplicationDbContext context)
         {
             _context = context;
         }
@@ -30,7 +27,7 @@ namespace TimeTracker.Pages.Entries
                 return NotFound();
             }
 
-            TimeSheetEntry = await _context.Entries.FirstOrDefaultAsync(m => m.Id == id);
+            TimeSheetEntry = await _context.GetEntryById(id.Value, GetUserGuid());
 
             if (TimeSheetEntry == null)
             {
@@ -46,11 +43,9 @@ namespace TimeTracker.Pages.Entries
                 return Page();
             }
 
-            _context.Attach(TimeSheetEntry).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.UpdateTimeSheetEntry(TimeSheetEntry);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -69,7 +64,12 @@ namespace TimeTracker.Pages.Entries
 
         private bool TimeSheetEntryExists(long id)
         {
-            return _context.Entries.Any(e => e.Id == id);
+            return _context.GetEntryById(id, GetUserGuid()) != null;
+        }
+
+        private string GetUserGuid()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }

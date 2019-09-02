@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TimeTracker.Data;
 using TimeTracker.Models;
 
@@ -14,9 +9,9 @@ namespace TimeTracker.Pages.Entries
 {
     public class CreateModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
-        public CreateModel(ApplicationDbContext context)
+        public CreateModel(IApplicationDbContext context)
         {
             _context = context;
         }
@@ -27,7 +22,7 @@ namespace TimeTracker.Pages.Entries
         }
 
         [BindProperty]
-        public TimeSheetEntry TimeSheetEntries { get; set; }
+        public TimeSheetEntry TimeSheetEntry { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -46,26 +41,23 @@ namespace TimeTracker.Pages.Entries
                 return Page();
             }
 
-            TimeSheetEntries.Job = job;
+            TimeSheetEntry.Job = job;
 
-            TimeSheetEntries.User = user;
+            TimeSheetEntry.User = user;
 
-            _context.Entries.Add(TimeSheetEntries);
-            await _context.SaveChangesAsync();
+            await _context.AddTimeSheetEntry(TimeSheetEntry);
 
             return RedirectToPage("./Index");
         }
 
         private async Task<User> GetUserOrNull()
         {
-            var users = await _context.Users.ToListAsync();
-            return users.Find(u => u.Id == GetUserGuid());
+            return await _context.GetUserByGuid(GetUserGuid());
         }
 
         private async Task<Job> GetJobOrNull()
         {
-            var jobs = await _context.Jobs.ToListAsync();
-            return jobs.Find(u => u.Id == TimeSheetEntries.Job.Id);
+            return await _context.GetJobById(TimeSheetEntry.Job.Id);
         }
 
         private string GetUserGuid()

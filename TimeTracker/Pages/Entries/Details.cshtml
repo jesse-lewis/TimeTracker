@@ -23,6 +23,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.TimeSheetEntry.Date)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeSheetEntry.Job.JobNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TimeSheetEntry.Job.JobNumber)
+        </dd>
     </dl>
 </div>
 <div>
