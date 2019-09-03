@@ -47,7 +47,7 @@
     $(document).ready(function () {
         $.getJSON('../api/job/', function (data) {
             var items = data.map(function (job) {
-                return { label: job.jobNumber, value: job.id };
+                return { label: `${job.jobNumber} ${job.description}`, value: job.id };
             });
             setAutocomplete(items);
         });

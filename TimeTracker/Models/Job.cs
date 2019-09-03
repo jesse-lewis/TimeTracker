@@ -8,6 +8,7 @@ namespace TimeTracker.Models
     {
         public Guid Id { get; set; }
         public string JobNumber { get; set; }
+        public string Description { get; set; }
 
         public override string ToString()
         {
