@@ -63,7 +63,9 @@
     });
     const setStartDateToSunday = function () {
         let today = new Date();
-        let sunday = new Date(today - today.getDay() * (1000 * 60 * 60 * 24))
+        let sunday = new Date();
+        sunday.setDate(today.getDate() - today.getDay());
+        sunday.setHours(0,0,0,0);
         startDate.val(sunday.toISOString().substr(0, 10));
     }
 </script>
