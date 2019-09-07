@@ -25,25 +25,34 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model.TimeSheetEntries) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Hours)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Job.JobNumber)
-                @Html.DisplayFor(modelItem => item.Job.Description)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+    <tbody id="entriesBody">
     </tbody>
 </table>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.getJSON('../api/entries/', function (data) {
+            createTableEntries(data);
+        });
+
+        const createTableEntries = function (entries) {
+            for (var entry of entries) {
+                let row = $("<tr></tr>").appendTo("#entriesBody");
+                row.append(`<td> ${entry.hours}</td >`);
+                row.append(`<td>${new Date(entry.date).toLocaleDateString()}</td>`);
+                row.append(`<td>${entry.job.jobNumber} ${entry.job.description}</td>`);
+                let td = $("<td></td>").appendTo(row);
+                td.append(addActions);
+                addActions(entry);
+            }
+        }
+
+        const addActions = function (entry) {
+            let actions = ['Edit', 'Details', 'Delete'];
+            actions = actions.map(a => `<a href=/Entries/${a}?id=${entry.id}">${a}</a>`);
+            return actions.join(' | ');
+        }
+    });
+</script>
