@@ -44,14 +44,13 @@
                 row.append(`<td>${new Date(entry.date).toLocaleDateString()}</td>`);
                 row.append(`<td>${entry.job.jobNumber} ${entry.job.description}</td>`);
                 let td = $("<td></td>").appendTo(row);
-                td.append(addActions);
-                addActions(entry);
+                td.append(addActions(entry));
             }
         }
 
         const addActions = function (entry) {
             let actions = ['Edit', 'Details', 'Delete'];
-            actions = actions.map(a => `<a href=/Entries/${a}?id=${entry.id}">${a}</a>`);
+            actions = actions.map(a => `<a href="/Entries/${a}?id=${entry.id}">${a}</a>`);
             return actions.join(' | ');
         }
     });
